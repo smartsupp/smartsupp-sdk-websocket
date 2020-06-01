@@ -5,7 +5,6 @@ docker-compose.yml
 .travis.yml
 .eslintrc.js
 .gitignore
-Makefile
 tsconfig.json
 .editorconfig
 .idea
