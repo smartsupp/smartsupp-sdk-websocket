@@ -1,8 +1,8 @@
 .DS_Store
 .idea
 .settings
-npm-debug.log
-node_modules
-.package-lock.json
 .npmrc
+/npm-debug.log
+/node_modules
 /lib
+/package-lock.json
