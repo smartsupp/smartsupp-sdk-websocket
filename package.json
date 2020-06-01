@@ -1,0 +1,46 @@
+{
+  "name": "smartsupp-websocket",
+  "version": "1.0.0",
+  "description": "Official Smartsupp websocket SDK",
+  "repository": "git://github.com/smartsupp/smartsupp-sdk-websocket.git",
+  "homepage": "https://github.com/smartsupp/smartsupp-sdk-websocket#readme",
+  "author": "Smartsupp",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "debug": "^4.1.1"
+  },
+  "peedDependencies": {
+    "socket.io-client": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.3",
+    "@types/node": "^12.7.2",
+    "@types/socket.io": "^2.1.8",
+    "@types/socket.io-client": "^1.4.33",
+    "@typescript-eslint/eslint-plugin": "^3.0.2",
+    "@typescript-eslint/parser": "^3.0.2",
+    "eslint": "^7.1.0",
+    "eslint-config-smartsupp": "github:smartsupp/eslint-config-smartsupp",
+    "jest": "^26.0.1",
+    "rimraf": "^3.0.2",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "ts-jest": "^26.1.0",
+    "typescript": "^3.8.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf lib",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts",
+    "test": "jest --verbose --runInBand",
+    "test:watch": "jest --watch --verbose --runInBand"
+  }
+}
