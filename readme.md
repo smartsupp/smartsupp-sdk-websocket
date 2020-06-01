@@ -11,7 +11,7 @@ yarn add smartsupp-websocket
 ```
 
 NOTE: We use [socket.io](https://github.com/socketio/socket.io-client) as websocket engine. 
-This package is required as peed dependency.
+This package is required as peer dependency.
 
 
 ## Usage
@@ -43,7 +43,7 @@ websocketClient.connect().then((data) => {
     console.log(err)
 })
 
-// received message from server
+// received events
 websocketClient.on('chat.message', (message) => {
     console.log(message)
 })
