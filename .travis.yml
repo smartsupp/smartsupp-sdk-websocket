@@ -2,8 +2,19 @@ language: node_js
 node_js:
   - 12
 install:
-  - npm ci
+  - npm install
+cache:
+  directories:
+    - "$HOME/.npm"
 script:
   - npm run lint
   - npm run build
   - npm run test
+  - npm run docs:build
+# TODO: allow travis push to github
+#deploy:
+#  provider: script
+#  script: ./scripts/docs-deploy.sh
+#  skip_cleanup: true
+#  on:
+#    branch: master
