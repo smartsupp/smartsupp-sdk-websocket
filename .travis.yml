@@ -10,3 +10,10 @@ script:
   - npm run lint
   - npm run build
   - npm run test
+  - npm run docs:build
+deploy:
+  provider: script
+  script: ./scripts/docs-deploy.sh
+  skip_cleanup: true
+  on:
+    branch: master

@@ -22,22 +22,31 @@
     "@types/socket.io-client": "^1.4.33",
     "@typescript-eslint/eslint-plugin": "^3.0.2",
     "@typescript-eslint/parser": "^3.0.2",
+    "@vuepress/plugin-back-to-top": "^1.5.0",
+    "@vuepress/plugin-nprogress": "^1.5.0",
     "eslint": "^7.1.0",
     "eslint-config-smartsupp": "github:smartsupp/eslint-config-smartsupp",
     "jest": "^26.0.1",
     "rimraf": "^3.0.2",
     "socket.io": "^2.3.0",
     "ts-jest": "^26.1.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "vuepress": "^1.5.0",
+    "vuepress-plugin-smooth-scroll": "0.0.9"
   },
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
     "clean": "rimraf lib",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs",
     "prepublishOnly": "npm run build && node ./scripts/prepublish.js",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts",
     "test": "jest --verbose --runInBand",
     "test:watch": "jest --watch --verbose --runInBand"
+  },
+  "resolutions": {
+    "watchpack": "1.6.1"
   }
 }

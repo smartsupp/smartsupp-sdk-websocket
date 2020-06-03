@@ -3,15 +3,13 @@
 
 ## Installation
 
-To install a SDK, simply add the high-level package, for example:
-
 ```bash
 npm install --save smartsupp-websocket
 yarn add smartsupp-websocket
 ```
 
-NOTE: We use [socket.io](https://github.com/socketio/socket.io-client) as websocket engine. 
-This package is required as peer dependency.
+- We use [socket.io](https://github.com/socketio/socket.io-client) as websocket engine. 
+- Documentation can be found on the [Gihub Pages](https://smartsupp.github.io/smartsupp-sdk-websocket/).
 
 
 ## Usage
@@ -21,23 +19,21 @@ Create and initialize websocket client and connect to the server.
 ```js
 import { createVisitorClient } from 'smartsupp-websocket'
 
-const websocketClient = createVisitorClient({
+const client = createVisitorClient({
     data: {
-        id: null, // or id returned from server
+        id: null, // null or id returned from server
         key: '__SMARTSUPP_ACCOUNT_KEY__',
         // ...
     },
 })
 
 // connect to server
-websocketClient.connect().then((data) => {
+client.connect().then((data) => {
     console.log(data)
-}).catch((err) => {
-    console.log(err)
 })
 
 // received events
-websocketClient.on('chat.message', (message) => {
+client.on('chat.message_received', (message) => {
     console.log(message)
 })
 ```
@@ -50,4 +46,14 @@ Customize promise library:
 ```js
 import * as smartsuppWebsocket from 'smartsupp-websocket'
 smartsuppWebsocket.setPromiseLibrary(Promise)
+```
+
+
+## Development
+
+VuePress docs hot reload workaround: 
+
+```bash
+npx npm-force-resolutions
+npm install
 ```
