@@ -20,7 +20,7 @@ export class Client extends EventEmitter {
 		this.sendBuffer = []
 
 		if (!options.url) {
-			throw new Error('Missing required option url')
+			options.url = 'https://websocket.smartsupp.com'
 		}
 		if (!options.options) {
 			options.options = {}
@@ -28,8 +28,14 @@ export class Client extends EventEmitter {
 		if (!options.options.hasOwnProperty('autoConnect')) {
 			options.options.autoConnect = false
 		}
+		if (!options.options.hasOwnProperty('forceNew')) {
+			options.options.forceNew = true
+		}
 		if (!options.options.hasOwnProperty('transports')) {
 			options.options.transports = ['websocket']
+		}
+		if (!options.options.hasOwnProperty('path')) {
+			options.options.path = '/socket'
 		}
 		this.connection = socketIo(options.url, options.options)
 

@@ -278,6 +278,7 @@ export interface Agent {
 export interface Group {
 	key: string
 	name: string
+	status: string
 }
 
 export interface Rating {

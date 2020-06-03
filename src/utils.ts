@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events'
+import { Agent, AgentStatus } from './types'
 
 export class SocketError extends Error {
 	code: number
@@ -49,4 +50,20 @@ export function createEmitter(emitter: EventEmitter, name: string) {
 	return (data) => {
 		emitter.emit(name, data)
 	}
+}
+
+export function getAgentsBestStatus(agents: Agent[]): AgentStatus {
+	for (const agent of agents) {
+		if (agent.status === AgentStatus.Online) {
+			return AgentStatus.Online
+		}
+	}
+	return AgentStatus.Offline
+}
+
+export function assign(target, source): any {
+	for (const prop in source) {
+		target[prop] = source[prop]
+	}
+	return target
 }

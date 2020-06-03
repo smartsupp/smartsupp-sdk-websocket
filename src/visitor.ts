@@ -3,16 +3,9 @@ import { Events } from './events'
 import { ChatRateInitResult, ChatReadInfo, ChatStatus, ChatUnreadInfo, ChatUploadInitResult, PromiseImpl, Properties, Rating, Visitor } from './index'
 import { AccountStatus, Agent, AuthenticateResult, Group, Message } from './types'
 import * as utils from './utils'
-import { createCallback, SocketError } from './utils'
+import { assign, createCallback, getAgentsBestStatus, SocketError } from './utils'
 
 const emitEvents = [
-	'account.updated',
-	'agent.status_updated',
-	'agent.removed',
-	'chat.agent_joined',
-	'chat.agent_assigned',
-	'chat.agent_unassigned',
-	'chat.agent_left',
 	'chat.closed',
 	'chat.message_received',
 	'chat.agent_typing',
@@ -33,20 +26,37 @@ export class VisitorClient extends Client {
 	serverVersion: number = null
 	identity: Visitor | null
 	connectData: ConnectOptions
+	accountStatus: AccountStatus = AccountStatus.Offline
+	agents: Agent[] = []
+	groups: Group[] = []
+	chatAssignedIds: string[] = []
 
 	private updatedValues: any = {}
 
 	constructor(options: VisitorClientOptions) {
 		super(options.connection)
-		this.connectData = options.data
+		this.connectData = {
+			pageUrl: typeof window !== 'undefined' ? window.document.location.toString() : null,
+			pageTitle: typeof window !== 'undefined' ? window.document.title : null,
+			referer: typeof window !== 'undefined' ? window.document.referrer : null,
+			domain: typeof window !== 'undefined' ? window.document.domain : null,
+			bundleVersion: '${BUNDLE_VERSION}', // replaced before publish
+			...options.data,
+		}
 		this.identity = null // initialized after first connect to server
 
 		for (const event of emitEvents) {
 			this.connection.on(event, utils.createEmitter(this, event))
 		}
-
 		this.connection.on('server.error', utils.bound(this, 'onServerError'))
+		this.connection.on('account.updated', utils.bound(this, 'onAccountUpdated'))
+		this.connection.on('agent.updated', utils.bound(this, 'onAgentUpdated'))
+		this.connection.on('agent.removed', utils.bound(this, 'onAgentRemoved'))
 		this.connection.on('visitor.updated', utils.bound(this, 'onVisitorUpdated'))
+		this.connection.on('chat.agent_joined', utils.bound(this, 'onChatAgentJoined'))
+		this.connection.on('chat.agent_left', utils.bound(this, 'onChatAgentLeft'))
+		this.connection.on('chat.agent_assigned', utils.bound(this, 'onChatAgentAssigned'))
+		this.connection.on('chat.agent_unassigned', utils.bound(this, 'onChatAgentUnassigned'))
 	}
 
 	//
@@ -54,8 +64,9 @@ export class VisitorClient extends Client {
 	//
 
 	on(event: 'initialized', listener: (data: ConnectedData) => void): this
-	on(event: 'account.updated', listener: (data: Events.AccountUpdated) => void): this
-	on(event: 'agent.status_updated', listener: (data: Events.AgentStatusUpdated) => void): this
+	on(event: 'account.status_updated', listener: (status: AccountStatus) => void): this
+	on(event: 'group.updated', listener: (group: Group) => void): this
+	on(event: 'agent.updated', listener: (data: Events.AgentUpdated) => void): this
 	on(event: 'agent.removed', listener: (data: Events.AgentRemoved) => void): this
 	on(event: 'visitor.updated', listener: (values: Partial<Visitor>) => void): this
 	on(event: 'chat.rated', listener: (data: Events.ChatRated) => void): this
@@ -63,9 +74,9 @@ export class VisitorClient extends Client {
 	on(event: 'chat.closed', listener: (data: Events.ChatClosed) => void): this
 	on(event: 'chat.agent_typing', listener: (data: Events.ChatAgentTyping) => void): this
 	on(event: 'chat.agent_joined', listener: (data: Events.ChatAgentJoined) => void): this
+	on(event: 'chat.agent_left', listener: (data: Events.ChatAgentLeft) => void): this
 	on(event: 'chat.agent_assigned', listener: (data: Events.ChatAgentAssigned) => void): this
 	on(event: 'chat.agent_unassigned', listener: (data: Events.ChatAgentUnassigned) => void): this
-	on(event: 'chat.agent_left', listener: (data: Events.ChatAgentLeft) => void): this
 	on(event: 'chat.contact_read', listener: (data: Events.ChatRead) => void): this
 	on(event: 'chat.deleted', listener: (data: Events.ChatDeleted) => void): this
 	on(event: 'error', listener: (err: Error | SocketError) => void): this
@@ -75,23 +86,57 @@ export class VisitorClient extends Client {
 		return this
 	}
 
-	getId(): string | null {
-		return this.identity ? this.identity.id : null
-	}
-
-	getIdentity(): Visitor | null {
-		return this.identity
-	}
+	//
+	// API methods
+	//
 
 	connect(): Promise<ConnectedData> {
 		return super.connect()
 	}
 
-	//
-	// API methods
-	//
+	getAccountStatus(): AccountStatus {
+		return this.accountStatus
+	}
 
-	update(values: UpdateOptions = {}) {
+	getVisitorId(): string | null {
+		return this.identity ? this.identity.id : null
+	}
+
+	getVisitorIdentity(): Visitor | null {
+		return this.identity
+	}
+
+	getAgents(): Agent[] {
+		return this.agents
+	}
+
+	getAgent(id: string): Agent {
+		for (const agent of this.agents) {
+			if (agent.id === id) {
+				return agent
+			}
+		}
+		return null
+	}
+
+	getGroups(): Group[] {
+		return this.groups
+	}
+
+	getGroup(key: string): Group {
+		for (const group of this.groups) {
+			if (group.key === key) {
+				return group
+			}
+		}
+		return null
+	}
+
+	getAssignedAgents(): Agent[] {
+		return this.chatAssignedIds.map(id => this.getAgent(id))
+	}
+
+	updateVisitorIdentity(values: UpdateOptions = {}) {
 		this.checkServerVersion()
 		for (const name in values) {
 			this.identity[name] = values[name]
@@ -105,16 +150,6 @@ export class VisitorClient extends Client {
 		return new PromiseImpl((resolve, reject) => {
 			this.send('visitor.authenticate', {
 				values,
-			}, createCallback(resolve, reject))
-		})
-	}
-
-	notify(name: string, value: string): Promise<void> {
-		this.checkServerVersion()
-		return new PromiseImpl((resolve, reject) => {
-			this.send('visitor.notify', {
-				name,
-				value,
 			}, createCallback(resolve, reject))
 		})
 	}
@@ -138,10 +173,10 @@ export class VisitorClient extends Client {
 		})
 	}
 
-	chatClose(type: string = null) {
+	chatClose(): Promise<void> {
 		this.checkServerVersion()
-		this.send('chat.close', {
-			type,
+		return new PromiseImpl((resolve, reject) => {
+			this.send('chat.close', null, createCallback(resolve, reject))
 		})
 	}
 
@@ -186,15 +221,8 @@ export class VisitorClient extends Client {
 	}
 
 	visitorConnect(): Promise<ConnectedData> {
-		const values = {
-			...this.connectData,
-		}
-
-		for (const key in this.updatedValues) {
-			values[key] = this.updatedValues[key]
-		}
+		const values = assign(assign({}, this.connectData), this.updatedValues)
 		this.updatedValues = {}
-
 		if (this.identity) {
 			for (const key in this.identity) {
 				if (readonlyProperties.indexOf(key) < 0) { // filter out read-only props
@@ -202,17 +230,8 @@ export class VisitorClient extends Client {
 				}
 			}
 		}
-
-		this.emit('initialize', values)
-
 		return new PromiseImpl((resolve, reject) => {
 			this.connection.emit('visitor.connect', values, createCallback(resolve, reject))
-		})
-	}
-
-	visitorDisconnect(): Promise<void> {
-		return new PromiseImpl((resolve, reject) => {
-			this.connection.emit('visitor.disconnect', {}, createCallback(resolve, reject))
 		})
 	}
 
@@ -220,7 +239,7 @@ export class VisitorClient extends Client {
 	// Event handlers
 	//
 
-	private onVisitorUpdated(data: Events.VisitorUpdated) {
+	private onVisitorUpdated(data: Events.VisitorUpdated): void {
 		const changes = {}
 		for (const name in data.changes) {
 			if (identityProperties.indexOf(name) >= 0) {
@@ -235,7 +254,50 @@ export class VisitorClient extends Client {
 		}
 	}
 
-	private onServerError(data: Events.ServerError) {
+	private onAccountUpdated(data: Events.AccountUpdated): void {
+		if (data.status) {
+			this.accountStatus = data.status
+			this.emit('account.status_updated', data.status)
+		}
+		this.emit('account.updated', data)
+	}
+
+	private onAgentUpdated(data: Events.AgentUpdated): void {
+		for (const agent of this.agents) {
+			if (agent.id === data.id) {
+				assign(agent, data.changes)
+			}
+		}
+		this.emit('agent.updated', data)
+	}
+
+	private onAgentRemoved(data: Events.AgentRemoved): void {
+		this.agents = this.agents.filter(agent => agent.id !== data.id)
+		this.syncGroupsStatus()
+		this.emit('agent.removed', data)
+	}
+
+	private onChatAgentJoined(data: Events.ChatAgentJoined): void {
+		this.chatAssignedIds.push(data.agent.id)
+		this.emit('chat.agent_joined', data)
+	}
+
+	private onChatAgentLeft(data: Events.ChatAgentLeft): void {
+		this.chatAssignedIds.splice(this.chatAssignedIds.indexOf(data.agent.id), 1)
+		this.emit('chat.agent_left', data)
+	}
+
+	private onChatAgentAssigned(data: Events.ChatAgentAssigned): void {
+		this.chatAssignedIds.push(data.assigned.id)
+		this.emit('chat.agent_assigned', data)
+	}
+
+	private onChatAgentUnassigned(data: Events.ChatAgentUnassigned): void {
+		this.chatAssignedIds.splice(this.chatAssignedIds.indexOf(data.unassigned.id), 1)
+		this.emit('chat.agent_unassigned', data)
+	}
+
+	private onServerError(data: Events.ServerError): void {
 		const err = utils.createError(data)
 		this.emit('error', err)
 	}
@@ -248,11 +310,16 @@ export class VisitorClient extends Client {
 		return this.visitorConnect().then((data: ConnectedData) => {
 			this.serverVersion = data.serverVersion
 			this.identity = data.visitor
+			this.accountStatus = data.account.status
+			this.agents = data.account.agents
+			this.groups = data.account.groups
+			this.chatAssignedIds = data.chat ? data.chat.assignedIds : []
+			this.syncGroupsStatus()
 			return data
 		})
 	}
 
-	private saveVisitorValues() {
+	private saveVisitorValues(): void {
 		if (!this.initialized) {
 			return // update only if initialized
 		}
@@ -269,9 +336,20 @@ export class VisitorClient extends Client {
 		}, 1)
 	}
 
-	private checkServerVersion() {
+	private checkServerVersion(): void {
 		if (this.serverVersion === null) {
 			throw new Error('Client not yet connected to server')
+		}
+	}
+
+	private syncGroupsStatus(): void {
+		for (const group of this.groups) {
+			const status = getAgentsBestStatus(this.agents.filter((agent) => {
+				return agent.groups.length === 0 || agent.groups.indexOf(group.key) >= 0
+			}))
+			if (group.status !== status) {
+				this.emit('group.updated', group)
+			}
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import { Agent, AgentStatus, IMessage, MessageContent, MessageEventContent, MessageEventGeneric, MessageGeneric, MessageSubType, Rating, Visitor } from './types'
+import { AccountStatus, Agent, AgentStatus, IMessage, MessageContent, MessageEventContent, MessageEventGeneric, MessageGeneric, MessageSubType, Rating, Visitor } from './types'
 
 export namespace Events {
 	export interface VisitorUpdated {
@@ -74,6 +74,11 @@ export namespace Events {
 		event?: string
 	}
 
+	export interface AgentUpdated {
+		id: string
+		changes: Partial<Agent>
+	}
+
 	export interface AgentStatusUpdated {
 		id: string
 		status: AgentStatus
@@ -84,6 +89,6 @@ export namespace Events {
 	}
 
 	export interface AccountUpdated {
-		status?: string
+		status?: AccountStatus
 	}
 }

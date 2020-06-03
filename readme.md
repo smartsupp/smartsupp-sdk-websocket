@@ -22,13 +22,6 @@ Create and initialize websocket client and connect to the server.
 import { createVisitorClient } from 'smartsupp-websocket'
 
 const websocketClient = createVisitorClient({
-    connection: {
-        url: 'https://websocket.smartsupp.com',
-        options: {
-            path: '/socket',
-            forceNew: true,
-        },
-    },
     data: {
         id: null, // or id returned from server
         key: '__SMARTSUPP_ACCOUNT_KEY__',
