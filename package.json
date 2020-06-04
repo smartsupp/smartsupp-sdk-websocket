@@ -40,6 +40,7 @@
     "clean": "rimraf lib",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
+    "docs:deploy": "./scripts/docs-deploy.sh",
     "prepublishOnly": "npm run build && node ./scripts/prepublish.js",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts",
