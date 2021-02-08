@@ -20,7 +20,7 @@ export class Client extends EventEmitter {
 		this.sendBuffer = []
 
 		if (!options.url) {
-			options.url = 'https://websocket.smartsupp.com'
+			options.url = 'https://websocket-visitors.smartsupp.com'
 		}
 		if (!options.options) {
 			options.options = {}
@@ -169,6 +169,6 @@ export class Client extends EventEmitter {
 }
 
 export interface ClientOptions {
-	url: string
-	options: SocketIOClient.ConnectOpts
+	url?: string
+	options?: SocketIOClient.ConnectOpts
 }

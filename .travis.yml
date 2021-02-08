@@ -7,10 +7,7 @@ cache:
   directories:
     - "$HOME/.npm"
 script:
-  - npm run lint
-  - npm run build
-  - npm run test
-  - npm run docs:build
+  - ./scripts/build.sh
 # TODO: allow travis push to github
 #deploy:
 #  provider: script

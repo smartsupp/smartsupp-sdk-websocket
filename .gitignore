@@ -1,9 +1,19 @@
-.DS_Store
+# dependencies
+node_modules
+/package-lock.json
+
+# build and test
+/lib
+/docs/.vuepress/dist
+/local
+
+# logs
+npm-debug.log
+
+# ide
 .idea
 .settings
+
+# misc
+.DS_Store
 .npmrc
-/npm-debug.log
-/node_modules
-/lib
-/package-lock.json
-/docs/.vuepress/dist
