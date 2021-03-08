@@ -1,13 +1,13 @@
 # Push Messages
 
-With api call `chatMessage` you can import message as history of communication with bot.
+With `chatMessage` API call you can import messages as the history of communication with the bot.
 
-Handover chat to agents when visitor sending message is default behaviour.
-With flag `preventOpenChat` you can suppress this behaviour.
+Handover of the chat to an agent when a visitor sends a message is the default behaviour.
+However, with the flag `preventOpenChat` you can suppress this behaviour.
 
-- when you pushing bot message as bot set `type: 'bot'`
-- when you pushing visitor message set `preventOpenChat: true`
-- when you pushing visitor message and want handover to agents set `preventOpenChat: false`
+- when you send bot message set `type: 'bot'`
+- when you send visitor message set `preventOpenChat` as `true`
+- when you send visitor message and want to notify agents with new chat set `preventOpenChat` as `false`
 
 ```typescript
 const client = sdk.createVisitorClient({
@@ -18,29 +18,31 @@ const client = sdk.createVisitorClient({
 client.connect().then(async () => {
 	// add visitor message
 	await client.chatMessage({
-		content: {
+		type: 'contact',
+        content: {
 			text: 'Hello',
 			type: 'text',
 		},
-		preventOpenChat: true, // must be disabled
+		preventOpenChat: true, // true => don't notify agents
 	})
 
 	// add bot message
 	await client.chatMessage({
+		type: 'bot',
 		content: {
 			text: 'Bot reply',
 			type: 'text',
 		},
-		type: 'bot',
 	})
 
 	// add visitor message (opening chat with agents)
 	await client.chatMessage({
+		type: 'contact',
 		content: {
 			text: 'How are you?',
 			type: 'text',
 		},
-		preventOpenChat: false, // must be enabled
+		preventOpenChat: false, // false => agets receive new chat notification
 	})
 })
 ```
