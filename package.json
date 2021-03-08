@@ -1,6 +1,6 @@
 {
   "name": "smartsupp-websocket",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Official Smartsupp websocket SDK",
   "repository": "git://github.com/smartsupp/smartsupp-sdk-websocket.git",
   "homepage": "https://github.com/smartsupp/smartsupp-sdk-websocket#readme",
