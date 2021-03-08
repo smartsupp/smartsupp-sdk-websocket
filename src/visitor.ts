@@ -1,9 +1,9 @@
 import { Client, ClientOptions } from './client'
 import { Events } from './events'
-import { ChatRateInitResult, ChatReadInfo, ChatStatus, ChatUnreadInfo, ChatUploadInitResult, PromiseImpl, Properties, Rating, Visitor } from './index'
 import { AccountStatus, Agent, AuthenticateResult, Group, Message } from './types'
 import * as utils from './utils'
 import { assign, createCallback, getAgentsBestStatus, SocketError } from './utils'
+import { ChatRateInitResult, ChatReadInfo, ChatStatus, ChatUnreadInfo, ChatUploadInitResult, PromiseImpl, Properties, Rating, Visitor } from './index'
 
 const emitEvents = [
 	'chat.closed',
@@ -34,7 +34,7 @@ export class VisitorClient extends Client {
 	private updatedValues: any = {}
 
 	constructor(options: VisitorClientOptions) {
-		super(options.connection)
+		super(options.connection || {})
 		this.connectData = {
 			pageUrl: typeof window !== 'undefined' ? window.document.location.toString() : null,
 			pageTitle: typeof window !== 'undefined' ? window.document.title : null,
@@ -356,7 +356,7 @@ export class VisitorClient extends Client {
 
 export interface VisitorClientOptions {
 	data: ConnectOptions
-	connection: ClientOptions
+	connection?: ClientOptions
 }
 
 export interface ConnectOptions {
@@ -379,12 +379,16 @@ export interface ConnectOptions {
 }
 
 export interface MessageOptions {
-	content: {
-		type: string
-		text?: string
-		data?: any
-	}
+	content: MessageOptionsContent
+	type?: 'contact' | 'bot'
 	isOffline?: boolean
+	preventOpenChat?: boolean
+}
+
+export interface MessageOptionsContent {
+	type: string
+	text?: string
+	data?: any
 }
 
 export interface RatingOptions {

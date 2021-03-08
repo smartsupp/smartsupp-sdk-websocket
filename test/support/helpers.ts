@@ -1,8 +1,16 @@
+import * as getPort from 'get-port'
 import * as SocketIO from 'socket.io'
 import * as smartsuppWebsocket from '../../src/index'
 import { createSocketServer } from './server'
 
-const LISTEN_PORT = process.env.PORT || '8999'
+let LISTEN_PORT
+
+export async function createServer(): Promise<SocketIO.Server> {
+	LISTEN_PORT = await getPort()
+	return createSocketServer(LISTEN_PORT, {
+		path: '/socket',
+	})
+}
 
 export function createClient(options: any = {}): smartsuppWebsocket.VisitorClient {
 	return smartsuppWebsocket.createVisitorClient({
@@ -16,11 +24,5 @@ export function createClient(options: any = {}): smartsuppWebsocket.VisitorClien
 			},
 		},
 		data: {} as any,
-	})
-}
-
-export function createServer(): SocketIO.Server {
-	return createSocketServer(LISTEN_PORT, {
-		path: '/socket',
 	})
 }

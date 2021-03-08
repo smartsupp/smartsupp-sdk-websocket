@@ -1,20 +1,20 @@
 language: node_js
+
 node_js:
-  - 12
-install:
-  - npm install
-cache:
-  directories:
-    - "$HOME/.npm"
+  - 14
+
+before_install: |
+  cat << EOF > ~/.npmrc
+  //npm.pkg.github.com/:_authToken=${GITHUB_PERSONAL_ACCESS_TOKEN}
+  @smartsupp:registry=https://npm.pkg.github.com
+  EOF
+
 script:
-  - npm run lint
-  - npm run build
-  - npm run test
-  - npm run docs:build
-# TODO: allow travis push to github
-#deploy:
-#  provider: script
-#  script: ./scripts/docs-deploy.sh
-#  skip_cleanup: true
-#  on:
-#    branch: master
+  - ./scripts/build.sh
+
+deploy:
+  provider: script
+  script: ./scripts/docs-deploy.sh
+  skip_cleanup: true
+  on:
+    branch: master
