@@ -13,6 +13,7 @@ module.exports = {
 		'@typescript-eslint/no-unsafe-return': 'off',
 		'@typescript-eslint/restrict-template-expressions': 'off',
 		'unicorn/filename-case': 'off',
+		'unicorn/prefer-includes': 'off',
 	},
 	parserOptions: {
 		project: './test/tsconfig.json',
