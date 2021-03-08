@@ -20,10 +20,18 @@ module.exports = {
 		repo: 'smartsupp/smartsupp-sdk-websocket',
 		sidebar: [
 			{
+				title: 'Guide',
 				collapsable: false,
 				children: [
 					'',
 					'usage',
+				],
+			},
+			{
+				title: 'Advanced',
+				collapsable: false,
+				children: [
+					'advanced/messages',
 				],
 			},
 		],
