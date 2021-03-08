@@ -19,4 +19,4 @@ deploy:
   skip_cleanup: true
   github_token: $GITHUB_PERSONAL_ACCESS_TOKEN
   on:
-    branch: '*'
+    branch: master
