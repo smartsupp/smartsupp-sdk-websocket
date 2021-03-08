@@ -25,14 +25,14 @@ export function createError(data: any = null): SocketError {
 		error.event = data.event
 	}
 	if (data.stack) {
-		error.stack = error.stack + '\nCaused By: ' + data.stack
+		error.stack = `${error.stack}\nCaused By: ${data.stack}`
 	}
 	return error
 }
 
 export function bound(scope, name) {
 	return (...args) => {
-		scope[name].apply(scope, args)
+		scope[name].apply(scope, args) // eslint-disable-line prefer-spread
 	}
 }
 

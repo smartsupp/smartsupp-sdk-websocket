@@ -4,8 +4,8 @@ describe('client', () => {
 	let server
 	let client
 
-	beforeAll(() => {
-		server = helpers.createServer()
+	beforeAll(async () => {
+		server = await helpers.createServer()
 		client = helpers.createClient()
 	})
 
@@ -13,7 +13,7 @@ describe('client', () => {
 		client.removeAllListeners()
 	})
 
-	test('should connect to server', (done) => {
+	test('should connect to server', () => {
 		expect.assertions(5)
 
 		client.on('connect', () => {
@@ -21,15 +21,15 @@ describe('client', () => {
 		})
 
 		expect(client.isConnected()).toBe(false)
-		client.connect().then((data) => {
+		return client.connect().then((data) => {
 			expect(client.isConnected()).toBe(true)
 			expect(client.isInitialized()).toBe(true)
 			expect(data.serverVersion).toBeDefined()
-			done()
+			return
 		})
 	})
 
-	test('should disconnect from server', (done) => {
+	test('should disconnect from server', () => {
 		expect.assertions(4)
 
 		client.on('disconnect', (reason) => {
@@ -38,13 +38,13 @@ describe('client', () => {
 		})
 
 		expect(client.isConnected()).toBe(true)
-		client.disconnect().then(() => {
+		return client.disconnect().then(() => {
 			expect(client.isConnected()).toBe(false)
-			done()
+			return
 		})
 	})
 
-	test('should re-connect to server', (done) => {
+	test('should re-connect to server', () => {
 		expect.assertions(5)
 
 		client.on('connect', () => {
@@ -52,15 +52,15 @@ describe('client', () => {
 		})
 
 		expect(client.isConnected()).toBe(false)
-		client.connect().then((data) => {
+		return client.connect().then((data) => {
 			expect(client.isConnected()).toBe(true)
 			expect(client.isInitialized()).toBe(true)
 			expect(data.serverVersion).toBeDefined()
-			done()
+			return
 		})
 	})
 
-	test('should again disconnect from server', (done) => {
+	test('should again disconnect from server', () => {
 		expect.assertions(4)
 
 		client.on('disconnect', (reason) => {
@@ -69,13 +69,13 @@ describe('client', () => {
 		})
 
 		expect(client.isConnected()).toBe(true)
-		client.disconnect().then(() => {
+		return client.disconnect().then(() => {
 			expect(client.isConnected()).toBe(false)
-			done()
+			return
 		})
 	})
 
 	afterAll(async () => {
-		server.close()
+		await server.close()
 	})
 })

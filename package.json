@@ -1,6 +1,6 @@
 {
   "name": "smartsupp-websocket",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Official Smartsupp websocket SDK",
   "repository": "git://github.com/smartsupp/smartsupp-sdk-websocket.git",
   "homepage": "https://github.com/smartsupp/smartsupp-sdk-websocket#readme",
@@ -12,27 +12,32 @@
     "access": "public"
   },
   "dependencies": {
-    "debug": "^4.1.1",
-    "socket.io-client": "^2.3.0"
+    "debug": "^4.3.1",
+    "socket.io-client": "^2.4.0"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.3",
-    "@types/node": "^12.7.2",
-    "@types/socket.io": "^2.1.8",
-    "@types/socket.io-client": "^1.4.33",
-    "@typescript-eslint/eslint-plugin": "^3.0.2",
-    "@typescript-eslint/parser": "^3.0.2",
-    "@vuepress/plugin-back-to-top": "^1.5.0",
-    "@vuepress/plugin-nprogress": "^1.5.0",
-    "eslint": "^7.1.0",
-    "eslint-config-smartsupp": "github:smartsupp/eslint-config-smartsupp",
-    "jest": "^26.0.1",
+    "@smartsupp/eslint-config": "^2.0.10",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.32",
+    "@types/socket.io": "^2.1.13",
+    "@types/socket.io-client": "^1.4.35",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
+    "@vuepress/plugin-back-to-top": "^1.8.2",
+    "@vuepress/plugin-nprogress": "^1.8.2",
+    "eslint": "^7.21.0",
+    "get-port": "^5.1.1",
+    "husky": "^5.1.3",
+    "jest": "^26.6.3",
     "rimraf": "^3.0.2",
-    "socket.io": "^2.3.0",
-    "ts-jest": "^26.1.0",
-    "typescript": "^3.8.3",
-    "vuepress": "^1.5.0",
-    "vuepress-plugin-smooth-scroll": "0.0.9"
+    "socket.io": "^2.4.1",
+    "ts-jest": "^26.5.3",
+    "typescript": "^4.2.3",
+    "vuepress": "^1.8.2",
+    "vuepress-plugin-smooth-scroll": "0.0.10"
+  },
+  "resolutions": {
+    "watchpack": "1.6.1"
   },
   "scripts": {
     "build": "tsc",
@@ -42,12 +47,15 @@
     "docs:build": "vuepress build docs",
     "docs:deploy": "./scripts/docs-deploy.sh",
     "prepublishOnly": "npm run build && node ./scripts/prepublish.js",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts",
+    "lint": "eslint ${LINT_ARGS} src/**/*.ts test/**/*.ts",
+    "fix": "LINT_ARGS='--fix' npm run lint",
     "test": "jest --verbose --runInBand",
-    "test:watch": "jest --watch --verbose --runInBand"
+    "test:watch": "jest --watch --verbose --runInBand",
+    "postinstall": "husky install"
   },
-  "resolutions": {
-    "watchpack": "1.6.1"
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix"
+    ]
   }
 }

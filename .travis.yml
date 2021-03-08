@@ -1,17 +1,14 @@
 language: node_js
+
 node_js:
-  - 12
-install:
-  - npm install
-cache:
-  directories:
-    - "$HOME/.npm"
+  - 14
+
 script:
   - ./scripts/build.sh
-# TODO: allow travis push to github
-#deploy:
-#  provider: script
-#  script: ./scripts/docs-deploy.sh
-#  skip_cleanup: true
-#  on:
-#    branch: master
+
+deploy:
+  provider: script
+  script: ./scripts/docs-deploy.sh
+  skip_cleanup: true
+  on:
+    branch: master

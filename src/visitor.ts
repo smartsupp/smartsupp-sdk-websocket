@@ -1,9 +1,9 @@
 import { Client, ClientOptions } from './client'
 import { Events } from './events'
-import { ChatRateInitResult, ChatReadInfo, ChatStatus, ChatUnreadInfo, ChatUploadInitResult, PromiseImpl, Properties, Rating, Visitor } from './index'
 import { AccountStatus, Agent, AuthenticateResult, Group, Message } from './types'
 import * as utils from './utils'
 import { assign, createCallback, getAgentsBestStatus, SocketError } from './utils'
+import { ChatRateInitResult, ChatReadInfo, ChatStatus, ChatUnreadInfo, ChatUploadInitResult, PromiseImpl, Properties, Rating, Visitor } from './index'
 
 const emitEvents = [
 	'chat.closed',
@@ -14,13 +14,13 @@ const emitEvents = [
 	'chat.deleted',
 ]
 
-const identityProperties = [
+const identityProperties = new Set([
 	'id', 'name', 'email', 'chatId', 'variables', 'lang', 'group', 'bannedAt', 'triggerable', 'visits',
-]
+])
 
-const readonlyProperties = [
+const readonlyProperties = new Set([
 	'bannedAt', 'chatId', 'status',
-]
+])
 
 export class VisitorClient extends Client {
 	serverVersion: number = null
@@ -225,7 +225,7 @@ export class VisitorClient extends Client {
 		this.updatedValues = {}
 		if (this.identity) {
 			for (const key in this.identity) {
-				if (readonlyProperties.indexOf(key) < 0) { // filter out read-only props
+				if (!readonlyProperties.has(key)) { // filter out read-only props
 					values[key] = this.identity[key]
 				}
 			}
@@ -242,7 +242,7 @@ export class VisitorClient extends Client {
 	private onVisitorUpdated(data: Events.VisitorUpdated): void {
 		const changes = {}
 		for (const name in data.changes) {
-			if (identityProperties.indexOf(name) >= 0) {
+			if (identityProperties.has(name)) {
 				if (this.identity) {
 					this.identity[name] = data.changes[name]
 				}
@@ -345,7 +345,7 @@ export class VisitorClient extends Client {
 	private syncGroupsStatus(): void {
 		for (const group of this.groups) {
 			const status = getAgentsBestStatus(this.agents.filter((agent) => {
-				return agent.groups.length === 0 || agent.groups.indexOf(group.key) >= 0
+				return agent.groups.length === 0 || agent.groups.includes(group.key)
 			}))
 			if (group.status !== status) {
 				this.emit('group.updated', group)
