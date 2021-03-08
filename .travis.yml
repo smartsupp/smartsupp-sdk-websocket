@@ -13,8 +13,10 @@ script:
   - ./scripts/build.sh
 
 deploy:
-  provider: script
-  script: ./scripts/docs-deploy.sh
+  provider: pages
+  local_dir: docs/.vuepress/dist
+  verbose: true
   skip_cleanup: true
+  github_token: $GITHUB_PERSONAL_ACCESS_TOKEN
   on:
-    branch: *
+    branch: '*'
