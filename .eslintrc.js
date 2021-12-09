@@ -14,6 +14,7 @@ module.exports = {
 		'@typescript-eslint/restrict-template-expressions': 'off',
 		'unicorn/filename-case': 'off',
 		'unicorn/prefer-includes': 'off',
+		'jest/no-test-return-statement': 'off',
 	},
 	parserOptions: {
 		project: './test/tsconfig.json',

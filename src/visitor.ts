@@ -436,6 +436,6 @@ export interface ChatInfo {
 	status: ChatStatus
 	readInfo: ChatReadInfo
 	unreadInfo: ChatUnreadInfo
-	messages: Array<Message>
+	messages: Message[]
 }
 
