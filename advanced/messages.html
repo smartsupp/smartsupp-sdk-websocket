@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Push Messages | Websocket SDK</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    
+    <meta name="description" content="Official Smartsupp websocket SDK documentation">
+    
+    <link rel="preload" href="/smartsupp-sdk-websocket/assets/css/0.styles.7f307ef1.css" as="style"><link rel="preload" href="/smartsupp-sdk-websocket/assets/js/app.dda75d1c.js" as="script"><link rel="preload" href="/smartsupp-sdk-websocket/assets/js/2.29471512.js" as="script"><link rel="preload" href="/smartsupp-sdk-websocket/assets/js/7.82add231.js" as="script"><link rel="prefetch" href="/smartsupp-sdk-websocket/assets/js/3.e99a60a0.js"><link rel="prefetch" href="/smartsupp-sdk-websocket/assets/js/4.5ea4938e.js"><link rel="prefetch" href="/smartsupp-sdk-websocket/assets/js/5.6ae6d0ad.js"><link rel="prefetch" href="/smartsupp-sdk-websocket/assets/js/6.50e13a4a.js"><link rel="prefetch" href="/smartsupp-sdk-websocket/assets/js/8.b3512ed0.js"><link rel="prefetch" href="/smartsupp-sdk-websocket/assets/js/9.0ea297b5.js">
+    <link rel="stylesheet" href="/smartsupp-sdk-websocket/assets/css/0.styles.7f307ef1.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/smartsupp-sdk-websocket/" class="home-link router-link-active"><img src="/smartsupp-sdk-websocket/assets/img/logo.svg" alt="Websocket SDK" class="logo"> <span class="site-name can-hide">Websocket SDK</span></a> <div class="links"><!----> <nav class="nav-links can-hide"> <a href="https://github.com/smartsupp/smartsupp-sdk-websocket" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"> <a href="https://github.com/smartsupp/smartsupp-sdk-websocket" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Guide</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/smartsupp-sdk-websocket/" aria-current="page" class="sidebar-link">Getting started</a></li><li><a href="/smartsupp-sdk-websocket/usage.html" class="sidebar-link">API Usage</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Advanced</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/smartsupp-sdk-websocket/advanced/messages.html" aria-current="page" class="active sidebar-link">Push Messages</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="push-messages"><a href="#push-messages" class="header-anchor">#</a> Push Messages</h1> <p>With <code>chatMessage</code> API call you can import messages as the history of communication with the bot.</p> <p>Handover of the chat to an agent when a visitor sends a message is the default behaviour.
+However, with the flag <code>preventOpenChat</code> you can suppress this behaviour.</p> <ul><li>when you send bot message set <code>type: 'bot'</code></li> <li>when you send visitor message set <code>preventOpenChat</code> as <code>true</code></li> <li>when you send visitor message and want to notify agents with new chat set <code>preventOpenChat</code> as <code>false</code></li></ul> <div class="language-typescript extra-class"><pre class="language-typescript"><code><span class="token keyword">const</span> client <span class="token operator">=</span> sdk<span class="token punctuation">.</span><span class="token function">createVisitorClient</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+	<span class="token operator">...</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// connect to server</span>
+client<span class="token punctuation">.</span><span class="token function">connect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+	<span class="token comment">// add visitor message</span>
+	<span class="token keyword">await</span> client<span class="token punctuation">.</span><span class="token function">chatMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+		type<span class="token operator">:</span> <span class="token string">'contact'</span><span class="token punctuation">,</span>
+        content<span class="token operator">:</span> <span class="token punctuation">{</span>
+			text<span class="token operator">:</span> <span class="token string">'Hello'</span><span class="token punctuation">,</span>
+			type<span class="token operator">:</span> <span class="token string">'text'</span><span class="token punctuation">,</span>
+		<span class="token punctuation">}</span><span class="token punctuation">,</span>
+		preventOpenChat<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token comment">// true =&gt; don't notify agents</span>
+	<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+	<span class="token comment">// add bot message</span>
+	<span class="token keyword">await</span> client<span class="token punctuation">.</span><span class="token function">chatMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+		type<span class="token operator">:</span> <span class="token string">'bot'</span><span class="token punctuation">,</span>
+		content<span class="token operator">:</span> <span class="token punctuation">{</span>
+			text<span class="token operator">:</span> <span class="token string">'Bot reply'</span><span class="token punctuation">,</span>
+			type<span class="token operator">:</span> <span class="token string">'text'</span><span class="token punctuation">,</span>
+		<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+	<span class="token comment">// add visitor message (opening chat with agents)</span>
+	<span class="token keyword">await</span> client<span class="token punctuation">.</span><span class="token function">chatMessage</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+		type<span class="token operator">:</span> <span class="token string">'contact'</span><span class="token punctuation">,</span>
+		content<span class="token operator">:</span> <span class="token punctuation">{</span>
+			text<span class="token operator">:</span> <span class="token string">'How are you?'</span><span class="token punctuation">,</span>
+			type<span class="token operator">:</span> <span class="token string">'text'</span><span class="token punctuation">,</span>
+		<span class="token punctuation">}</span><span class="token punctuation">,</span>
+		preventOpenChat<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token comment">// false =&gt; agets receive new chat notification</span>
+	<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/smartsupp-sdk-websocket/usage.html" class="prev">
+        API Usage
+      </a></span> <!----></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/smartsupp-sdk-websocket/assets/js/app.dda75d1c.js" defer></script><script src="/smartsupp-sdk-websocket/assets/js/2.29471512.js" defer></script><script src="/smartsupp-sdk-websocket/assets/js/7.82add231.js" defer></script>
+  </body>
+</html>
