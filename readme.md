@@ -8,7 +8,7 @@ npm install --save smartsupp-websocket
 yarn add smartsupp-websocket
 ```
 
-- We use [socket.io](https://github.com/socketio/socket.io-client) as websocket engine. 
+- We use [socket.io](https://github.com/socketio/socket.io-client) as websocket engine.
 - Documentation can be found on the [Gihub Pages](https://smartsupp.github.io/smartsupp-sdk-websocket/).
 
 
@@ -51,9 +51,10 @@ smartsuppWebsocket.setPromiseLibrary(Promise)
 
 ## Development
 
-VuePress docs hot reload workaround: 
+VuePress docs hot reload workaround:
 
 ```bash
+make init NPMRC_FILE=~/.npmrc
 npx npm-force-resolutions
 npm install
 ```

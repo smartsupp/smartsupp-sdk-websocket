@@ -11,3 +11,4 @@ tsconfig.json
 docs
 local
 scripts
+.npmrc

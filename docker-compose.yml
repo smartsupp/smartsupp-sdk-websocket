@@ -1,8 +1,8 @@
-version: '2.2'
+version: "2.2"
 
 services:
   node:
-    image: node:14-alpine
+    image: node:16.13
     working_dir: /app
     volumes:
       - .:/app:delegated

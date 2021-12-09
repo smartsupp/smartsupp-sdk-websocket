@@ -1,7 +1,7 @@
-import { SocketError } from './utils'
+
 import { VisitorClient, VisitorClientOptions } from './visitor'
 
-export { SocketError }
+
 export * from './visitor'
 export * from './types'
 export * from './events'
@@ -15,3 +15,5 @@ export function createVisitorClient(options: VisitorClientOptions): VisitorClien
 export function setPromiseLibrary(promiseImpl: any) {
 	PromiseImpl = promiseImpl
 }
+
+export {SocketError} from './utils'
